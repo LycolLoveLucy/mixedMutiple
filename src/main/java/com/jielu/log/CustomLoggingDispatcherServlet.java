@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -18,7 +19,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class CustomLoggingDispatcherServlet extends DispatcherServlet {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger("logging");
+    private static final Logger logger = LoggerFactory.getLogger("logging");
     private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override

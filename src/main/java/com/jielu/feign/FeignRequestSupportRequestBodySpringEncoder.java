@@ -81,9 +81,9 @@ public class FeignRequestSupportRequestBodySpringEncoder implements Encoder {
                     if(HttpMethod.resolve(request.method())==HttpMethod.GET) {
                     if(requestBody !=null) {
                         Map<String, Object> requestMap =getParsedChainMap(objectToMap(requestBody));
-                        for (Map.Entry entry : requestMap.entrySet()) {
+                        for (Map.Entry<String,Object> entry : requestMap.entrySet()) {
                             if (null != entry.getValue()) {
-                                request.query(entry.getKey().toString(), entry.getValue().toString());
+                                request.query(entry.getKey(), entry.getValue().toString());
                             }
                         }
                     }
