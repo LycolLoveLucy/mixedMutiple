@@ -19,7 +19,8 @@ import java.util.List;
 
 /**
  * @Author:lycol
- * 注入批量插入的方法,方法名师insertBatch
+ * Add batch insert custom method when using mybatis-plus
+ * This is not reuse sqlSession but  real sql-level by insert schema
  */
 public class BatchInsertByList extends AbstractMethod {
     @Override
@@ -107,7 +108,7 @@ public class BatchInsertByList extends AbstractMethod {
                 idField =f.getName();
                 break;
             }
-            //another situation is the no annotation for the class field
+            //else situation is the no @TableId annotation from the model-classes
             else{
                 for(char c:f.getName().toCharArray()){
                     if(Character.isUpperCase(c)){
@@ -132,7 +133,7 @@ public class BatchInsertByList extends AbstractMethod {
         if(clazz== Date.class||clazz== java.sql.Date.class){
             return  JdbcType.DATE.name();
         }
-        //默认返回JavaObject
+        //default is java_object type
         return  JdbcType.JAVA_OBJECT.name();
 
     }

@@ -29,9 +29,7 @@ import java.util.List;
  */
 @Component
 public class NoLogBeanPostProcessor implements BeanPostProcessor{
-
     private List<Class> noLogClasses= Collections.synchronizedList(new ArrayList<>());
-
     final LoggerContext loggerContext =(LoggerContext)LoggerFactory.getILoggerFactory();
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {

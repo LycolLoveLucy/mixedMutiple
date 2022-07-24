@@ -9,7 +9,6 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 @Configuration
 public class LogApplicationConfig {
-
     @Bean
     public ServletRegistrationBean dispatcherRegistration() {
 

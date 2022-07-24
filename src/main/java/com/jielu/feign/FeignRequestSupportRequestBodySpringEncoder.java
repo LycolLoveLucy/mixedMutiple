@@ -1,7 +1,6 @@
 package com.jielu.feign;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import feign.Request;
 import feign.RequestTemplate;
 import feign.Util;
 import feign.codec.EncodeException;
@@ -87,7 +86,7 @@ public class FeignRequestSupportRequestBodySpringEncoder implements Encoder {
                             }
                         }
                     }
-                        request.body(Request.Body.empty());
+                        request.body();
                     }
 
                     else {
@@ -159,32 +158,44 @@ public class FeignRequestSupportRequestBodySpringEncoder implements Encoder {
         Map<String,Object> map=DFS(requestBodyMap,"",0,new HashMap<>());
         return map;
     }
-    private static Map<String,Object> DFS(Map<String, Object> requestMap,String chainStr,int deep,  Map<String,Object> parsedMap){
+
+    /**
+     *
+     * @param requestMap
+     * @param queryStr
+     * @param deep
+     * @param parsedMap
+     * @returnM  key is concat the path of real value in situation which is fetching the value of object java type
+     */
+    private static Map<String,Object> DFS(Map<String, Object> requestMap,
+                                          String queryStr,
+                                          int deep,
+                                          Map<String,Object> parsedMap){
         if(CollectionUtils.isEmpty(requestMap)){
             return parsedMap;
         }
         for (Map.Entry<String,Object> entry : requestMap.entrySet()) {
             if(entry.getValue() instanceof Map){
                 if(deep>=10){
-                    throw new RuntimeException("The object defined so complex,keep simply");
+                    throw new RuntimeException("The object has defined so complex,keep simply");
                 }
-                if("".equals(chainStr)||chainStr==null){
+                if("".equals(queryStr)||queryStr==null){
                     DFS((Map<String, Object>)entry.getValue(),entry.getKey(),
                             deep+1,parsedMap);
                 }
                 else {
                     DFS((Map<String, Object>) entry.getValue(),
-                            chainStr + "." + entry.getKey(),
+                            queryStr + "." + entry.getKey(),
                             deep + 1,
                             parsedMap);
                 }
             }
             else {
-                if("".equals(chainStr)||null==chainStr){
+                if("".equals(queryStr)||null==queryStr){
                     parsedMap.put(entry.getKey(),entry.getValue());
                 }
                 else {
-                    parsedMap.put(chainStr+"."+entry.getKey(),entry.getValue());
+                    parsedMap.put(queryStr+"."+entry.getKey(),entry.getValue());
                 }
                 deep=0;
 
