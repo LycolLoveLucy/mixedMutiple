@@ -14,8 +14,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * <p>改变Bean的日志级别，可以让它不打印日志
- * 具体使用是在日之类上加上@NoLog即可。
+ *
+ * <p>
+ *
+ * This postProcessor it is used for change the log-level for  IOC
+ *
  * </p>
  *
  * <code>

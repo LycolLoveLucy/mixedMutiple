@@ -48,7 +48,7 @@ public class BatchInsertByList extends AbstractMethod {
 
     private String getBatchInsertSql(TableInfo tableInfo, Class<?> modelClass){
         if(!modelClass.isAnnotationPresent(Dialect.class)){
-            throw  new RuntimeException("the model :"+modelClass.getName()+" must not be no annotation Dialect");
+            throw  new RuntimeException("The model :"+modelClass.getName()+" must not be no annotation Dialect");
         }
         String batchInsertSql=CustomSqlMethod.INSERT_BATCH.getSql();
         StringBuilder insertColumnBuilder=new StringBuilder();
@@ -57,9 +57,9 @@ public class BatchInsertByList extends AbstractMethod {
         int size=fieldList.size();
         Field[]fields= modelClass.getDeclaredFields();
 
-        //ID属性
+        //ID Field
         String idField="";
-        //添加主键column
+        //Add primary column attribute
         idField = getInsertColumnString(insertColumnBuilder, fields, idField);
         //获取父类的属性字段
         if(ObjectUtils.isEmpty(idField)) {
@@ -139,7 +139,7 @@ public class BatchInsertByList extends AbstractMethod {
     }
 
     private String getForeachMySQLSql() {
-        return "values" +
+        return "VALUES" +
                 " <foreach collection=\"items\" item='item'  open='' index='index' separator=','>\n" +
                 "(%s,%s)</foreach>";
     }

@@ -19,7 +19,7 @@ public class UploadServiceImpl  implements  UploadService{
         for(MultipartFile multipartFile:multipartFiles){
             String md5Str= MD5EncodeInputStreamUtil.getEncodeInputStream(multipartFile.getInputStream());
             if(localCache.get(md5Str)!=null){
-                throw  new RuntimeException("文件不允许重复上传,repeat md5 key is:"+md5Str);
+                throw  new RuntimeException("File uploaded before,repeat md5 key is:"+md5Str);
             }
             localCache.put(md5Str,multipartFile);
         }

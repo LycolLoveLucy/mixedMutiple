@@ -8,7 +8,7 @@ public class JVMLocalCache {
     private static final int WATERSHED_SIZE = 1000;
 
     /**
-     * second periods it is used for the cached object should be evicted time point
+     * How long keep-alive in  the container
      */
     private int evictTime = 0;
 
@@ -23,7 +23,7 @@ public class JVMLocalCache {
     }
 
     public void put(String key, Object v) {
-        //you need to do clear work when "put" operation
+        //you need to do clean work when "put" operation
         clear();
         final long bornTime = System.currentTimeMillis();
         CachedObject cachedObject = new CachedObject(bornTime, v);
@@ -45,7 +45,7 @@ public class JVMLocalCache {
     }
 
     final void clear() {
-        //watershed size of clear header of  is 10000
+        //watershed size of clean head-size of  is 10000
         if (concurrentLinkedHashMap.size() <= WATERSHED_SIZE) {
             return;
         }

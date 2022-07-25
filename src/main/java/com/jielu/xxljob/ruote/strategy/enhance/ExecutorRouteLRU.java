@@ -1,6 +1,8 @@
 package com.jielu.xxljob.ruote.strategy.enhance;
 
 
+import com.jielu.util.CollectionUtils;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,8 +36,10 @@ public class ExecutorRouteLRU extends ExecutorRouter {
 
         synchronized (addressList.getClass()) {
             // put new
-            for (String address : addressList) {
-                lruItem.putIfAbsent(address, address);
+            if (CollectionUtils.isNotEmpty(addressList)) {
+                for (String address : addressList) {
+                    lruItem.putIfAbsent(address, address);
+                }
             }
         }
 

@@ -46,7 +46,7 @@ public final class ConcurrentLinkedHashMap<S, C> extends ConcurrentHashMap {
             this.k = k;
         }
 
-        public Node getFirst() {
+       private Node getFirst() {
             return first;
         }
     }
