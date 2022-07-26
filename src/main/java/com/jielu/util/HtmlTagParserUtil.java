@@ -117,15 +117,4 @@ public final class HtmlTagParserUtil {
         tagMap.remove(attribute);
     }
 
-
-
-    public static void main(String[] args) {
-        String input = " <input type=\"text\" readonly=\"readonly\" autocomplete = \"off\" placeholder=\"请选择\" class=\"el-input__inner\">";
-        HtmlTagParserUtil htmlTagParser = new HtmlTagParserUtil(input);
-        htmlTagParser.convert();
-        htmlTagParser.setAttribute("readonly", "false");
-        htmlTagParser.addAttribute("style", "height=100;weight=200");
-        System.out.println(htmlTagParser.getText());
-
-    }
 }
