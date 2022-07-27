@@ -46,14 +46,17 @@ public final class HtmlTagParserUtil {
     }
 
     public String getText() {
-        StringBuilder sbd = new StringBuilder();
+
+        final StringBuilder sbd = new StringBuilder();
         sbd.append(START_FLAG).append(type);
+
         tagMap.forEach((attribute, value) -> {
             sbd.append(" ");
             sbd.append(attribute);
             sbd.append(EQUALS_FLAG);
             sbd.append(value);
         });
+
         sbd.append(" ").append("/").append(END_FLAG);
         return sbd.toString();
     }

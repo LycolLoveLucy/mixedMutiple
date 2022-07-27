@@ -3,6 +3,7 @@ package com.jielu.leetcode;
 import java.util.concurrent.Semaphore;
 
 class FooBar {
+
     private int n;
 
     Semaphore foo = new Semaphore(1);
@@ -30,6 +31,7 @@ class FooBar {
         }
 
     }
+
 
     public static void main(String[] args) throws InterruptedException {
         NamedThreadFactory namedThreadFactory=new NamedThreadFactory();

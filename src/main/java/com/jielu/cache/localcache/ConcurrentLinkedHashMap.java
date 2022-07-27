@@ -5,8 +5,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantLock;
 
 public final class ConcurrentLinkedHashMap<S, C> extends ConcurrentHashMap {
+
     private AtomicReference<Node> node = new AtomicReference(new Node(new Object()));
     private AtomicReference<Node> first = new AtomicReference(node.get().getFirst());
+
     @Override
     public Object put(Object key, Object value) {
         final ReentrantLock reentrantLock = new ReentrantLock();

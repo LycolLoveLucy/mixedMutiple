@@ -7,6 +7,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
 import java.lang.management.ManagementFactory;
 import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class OrderUtil {
 
@@ -19,14 +20,21 @@ public class OrderUtil {
 
     private static  final long  workerId=getMaxWorkerId(maxWorkerId,maxDatacenterId);
 
-    public static final FastDateFormat FULL_DATE_FORMAT = FastDateFormat.getInstance("yyyyMMddHHmmssS");
+    public static final FastDateFormat FULL_DATE_FORMAT = FastDateFormat.getInstance("yyyyMMddHHmmss");
 
     public static  final ThreadLocalRandom  threadLocalRandom=ThreadLocalRandom.current();
 
-    public static String genDateYYMMssYYYRandomOrderCode(String prefix){
+    private static final  int  FIXED_LEN=4;
+
+    public static String genDateYYMMssRandomOrderCode(String prefix){
        String dateFormatterStr= FULL_DATE_FORMAT.format(new Date());
-       long  randomNextInt= threadLocalRandom.nextInt(1000,9999);
-       return prefix+dateFormatterStr+workerId+randomNextInt;
+       int  randomNextInt= threadLocalRandom.nextInt(1000,9999);
+       String randomNextIntStr=randomNextInt+"";
+       for (int i=1;i<=FIXED_LEN-randomNextIntStr.length();i++){
+           randomNextIntStr="0"+randomNextIntStr;
+
+       }
+       return prefix+workerId+dateFormatterStr+randomNextIntStr;
 
     }
 
@@ -43,14 +51,6 @@ public class OrderUtil {
         return (mpid.toString().hashCode() & 0xffff) % (maxWorkerId + 1);
     }
 
-    public static void main(String[] args) {
-        int sampleCodeLen=genDateYYMMssYYYRandomOrderCode("task").length();
-       for(int i=1;i<=100000;i++){
-           int eachGenCodeLen=genDateYYMMssYYYRandomOrderCode("task").length();
-           if(sampleCodeLen!=eachGenCodeLen){
-               throw  new RuntimeException("un passed");
-           }
-       }
-    }
+
 
 }
