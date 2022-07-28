@@ -90,7 +90,7 @@ public class JobRegistryHelper {
 
 							// fresh group address
 							for (XxlJobGroup group: groupList) {
-								List<String> registryList = appAddressMap.get(group.getAppname());
+								List<String> registryList = appAddressMap.get(group.getAppName());
 								String addressListStr = null;
 								if (registryList!=null && !registryList.isEmpty()) {
 									Collections.sort(registryList);

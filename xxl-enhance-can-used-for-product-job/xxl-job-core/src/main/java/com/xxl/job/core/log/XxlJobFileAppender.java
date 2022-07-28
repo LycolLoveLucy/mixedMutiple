@@ -1,6 +1,7 @@
 package com.xxl.job.core.log;
 
 import com.xxl.job.core.biz.model.LogResult;
+import com.xxl.job.core.util.IOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -184,12 +185,6 @@ public class XxlJobFileAppender {
 		LogResult logResult = new LogResult(fromLineNum, toLineNum, logContentBuffer.toString(), false);
 		return logResult;
 
-		/*
-        // it will return the number of characters actually skipped
-        reader.skip(Long.MAX_VALUE);
-        int maxLineNum = reader.getLineNumber();
-        maxLineNum++;	// 最大行号
-        */
 	}
 
 	/**
@@ -212,13 +207,7 @@ public class XxlJobFileAppender {
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					logger.error(e.getMessage(), e);
-				}
-			}
+			IOUtil.close(reader);
 		}
 		return null;
 	}

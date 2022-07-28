@@ -47,17 +47,9 @@ public class EmbedServer {
                         60L,
                         TimeUnit.SECONDS,
                         new LinkedBlockingQueue<Runnable>(2000),
-                        new ThreadFactory() {
-                            @Override
-                            public Thread newThread(Runnable r) {
-                                return new Thread(r, "xxl-job, EmbedServer bizThreadPool-" + r.hashCode());
-                            }
-                        },
-                        new RejectedExecutionHandler() {
-                            @Override
-                            public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-                                throw new RuntimeException("xxl-job, EmbedServer bizThreadPool is EXHAUSTED!");
-                            }
+                        new NamedThreadFactory("xxl-job-EmbedServer bizThreadPool-"),
+                        (r, executor) -> {
+                            throw new RuntimeException("xxl-job, EmbedServer bizThreadPool is EXHAUSTED!");
                         });
                 try {
                     // start server
@@ -182,24 +174,13 @@ public class EmbedServer {
 
             // services mapping
             try {
-                switch (uri) {
-                    case "/beat":
-                        return executorBiz.beat();
-                    case "/idleBeat":
-                        IdleBeatParam idleBeatParam = GsonTool.fromJson(requestData, IdleBeatParam.class);
-                        return executorBiz.idleBeat(idleBeatParam);
-                    case "/run":
-                        TriggerParam triggerParam = GsonTool.fromJson(requestData, TriggerParam.class);
-                        return executorBiz.run(triggerParam);
-                    case "/kill":
-                        KillParam killParam = GsonTool.fromJson(requestData, KillParam.class);
-                        return executorBiz.kill(killParam);
-                    case "/log":
-                        LogParam logParam = GsonTool.fromJson(requestData, LogParam.class);
-                        return executorBiz.log(logParam);
-                    default:
-                        return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping(" + uri + ") not found.");
+                NettyHttpStrategyExeByUri nettyHttpStrategyExeByUri=new NettyHttpStrategyExeByUri(executorBiz);
+
+                Executor executor= nettyHttpStrategyExeByUri.getExecutorMapping().get(uri);
+                if(executor==null){
+                    return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping(" + uri + ") not found.");
                 }
+                return  executor.exec(requestData);
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
                 return new ReturnT<String>(ReturnT.FAIL_CODE, "request error:" + ThrowableUtil.toString(e));

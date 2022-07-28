@@ -9,19 +9,25 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.mail.internet.MimeMessage;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * job alarm by email
  *
  * @author xuxueli 2020-01-19
+ * @Modifier Lycol
  */
 @Component
 public class EmailJobAlarm implements JobAlarm {
@@ -59,25 +65,28 @@ public class EmailJobAlarm implements JobAlarm {
                     alarmContent);
 
             Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
+            if(CollectionUtils.isEmpty(emailSet)){
+                return  true;
+            }
+            List<MimeMessage> mimeMessageList=new ArrayList<>(emailSet.size());
+            JavaMailSender mailSender=XxlJobAdminConfig.getAdminConfig().getMailSender();
+            // make mail
+            try {
             for (String email: emailSet) {
-
-                // make mail
-                try {
-                    MimeMessage mimeMessage = XxlJobAdminConfig.getAdminConfig().getMailSender().createMimeMessage();
-
+                    MimeMessage mimeMessage = mailSender.createMimeMessage();
                     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
                     helper.setFrom(XxlJobAdminConfig.getAdminConfig().getEmailFrom(), personal);
                     helper.setTo(email);
                     helper.setSubject(title);
                     helper.setText(content, true);
-
-                    XxlJobAdminConfig.getAdminConfig().getMailSender().send(mimeMessage);
-                } catch (Exception e) {
-                    logger.error(">>>>>>>>>>> xxl-job, job fail alarm email send error, JobLogId:{}", jobLog.getId(), e);
-
-                    alarmResult = false;
+                    mimeMessageList.add(mimeMessage);
                 }
+              mailSender.send(mimeMessageList.toArray(new MimeMessage[mimeMessageList.size()]));
+            }
+            catch (Exception e) {
+                logger.error(">>>>>>>>>>> xxl-job, job fail alarm email send error, JobLogId:{}", jobLog.getId(), e);
 
+                alarmResult = false;
             }
         }
 

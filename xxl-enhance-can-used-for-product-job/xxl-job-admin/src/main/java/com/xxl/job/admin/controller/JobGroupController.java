@@ -62,13 +62,13 @@ public class JobGroupController {
 	public ReturnT<String> save(XxlJobGroup xxlJobGroup){
 
 		// valid
-		if (xxlJobGroup.getAppname()==null || xxlJobGroup.getAppname().trim().length()==0) {
+		if (xxlJobGroup.getAppName()==null || xxlJobGroup.getAppName().trim().length()==0) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input")+"AppName") );
 		}
-		if (xxlJobGroup.getAppname().length()<4 || xxlJobGroup.getAppname().length()>64) {
+		if (xxlJobGroup.getAppName().length()<4 || xxlJobGroup.getAppName().length()>64) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_appname_length") );
 		}
-		if (xxlJobGroup.getAppname().contains(">") || xxlJobGroup.getAppname().contains("<")) {
+		if (xxlJobGroup.getAppName().contains(">") || xxlJobGroup.getAppName().contains("<")) {
 			return new ReturnT<String>(500, "AppName"+I18nUtil.getString("system_unvalid") );
 		}
 		if (xxlJobGroup.getTitle()==null || xxlJobGroup.getTitle().trim().length()==0) {
@@ -104,10 +104,10 @@ public class JobGroupController {
 	@ResponseBody
 	public ReturnT<String> update(XxlJobGroup xxlJobGroup){
 		// valid
-		if (xxlJobGroup.getAppname()==null || xxlJobGroup.getAppname().trim().length()==0) {
+		if (xxlJobGroup.getAppName()==null || xxlJobGroup.getAppName().trim().length()==0) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input")+"AppName") );
 		}
-		if (xxlJobGroup.getAppname().length()<4 || xxlJobGroup.getAppname().length()>64) {
+		if (xxlJobGroup.getAppName().length()<4 || xxlJobGroup.getAppName().length()>64) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_appname_length") );
 		}
 		if (xxlJobGroup.getTitle()==null || xxlJobGroup.getTitle().trim().length()==0) {
@@ -115,7 +115,7 @@ public class JobGroupController {
 		}
 		if (xxlJobGroup.getAddressType() == 0) {
 			// 0=自动注册
-			List<String> registryList = findRegistryByAppName(xxlJobGroup.getAppname());
+			List<String> registryList = findRegistryByAppName(xxlJobGroup.getAppName());
 			String addressListStr = null;
 			if (registryList!=null && !registryList.isEmpty()) {
 				Collections.sort(registryList);

@@ -6,6 +6,7 @@ import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.core.util.NumericValidationUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.context.XxlJobContext;
 import org.slf4j.Logger;
@@ -54,7 +55,7 @@ public class XxlJobCompleter {
 
                 String[] childJobIds = xxlJobInfo.getChildJobId().split(",");
                 for (int i = 0; i < childJobIds.length; i++) {
-                    int childJobId = (childJobIds[i]!=null && childJobIds[i].trim().length()>0 && isNumeric(childJobIds[i]))?Integer.valueOf(childJobIds[i]):-1;
+                    int childJobId = (childJobIds[i]!=null && childJobIds[i].trim().length()>0 && NumericValidationUtil.isNumeric(childJobIds[i]))?Integer.valueOf(childJobIds[i]):-1;
                     if (childJobId > 0) {
 
                         JobTriggerPoolHelper.trigger(childJobId, TriggerTypeEnum.PARENT, -1, null, null, null);
@@ -86,14 +87,4 @@ public class XxlJobCompleter {
         // on the way
 
     }
-
-    private static boolean isNumeric(String str){
-        try {
-            int result = Integer.valueOf(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
 }
