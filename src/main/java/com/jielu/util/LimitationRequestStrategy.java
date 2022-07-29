@@ -1,8 +1,6 @@
 package com.jielu.util;
 
 import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -43,7 +41,6 @@ public class LimitationRequestStrategy {
     public void request(String token) {
 
         long systemNow = System.currentTimeMillis();
-
         if (limitationConcurrentMap.get(token) == null) {
             AtomicReference atomicReference = new AtomicReference();
             atomicReference.set(new Pair(systemNow));
@@ -67,8 +64,7 @@ public class LimitationRequestStrategy {
     }
 
     private static long getSecondsOf(Long startTime, Long systemCurrentTime) {
-
-        return ((startTime - startTime) / 1000);
+        return ((systemCurrentTime -startTime ) / 1000);
     }
 
 
@@ -105,21 +101,8 @@ public class LimitationRequestStrategy {
             return lastRequestTime;
         }
 
-        public void setLastRequestTime(Long lastRequestTime) {
-            this.lastRequestTime = lastRequestTime;
-        }
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        String[] tokens = new String[]{UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString()};
-        LimitationRequestStrategy limitationRequestStrategy = new LimitationRequestStrategy(50, 3);
-        for (int i = 1; i <= 10000; i++) {
-            String token = tokens[new Random().nextInt(tokens.length - 1)];
-            limitationRequestStrategy.request(token);
-            Thread.sleep(1000);
-            System.out.println("token :[" + token + "]" + "has request counter  is:" + limitationRequestStrategy.limitationConcurrentMap.get(token).get().getAtomicInteger());
 
-        }
-    }
 }
 
