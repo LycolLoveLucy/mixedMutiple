@@ -31,9 +31,9 @@ public interface XxlJobLogDao {
 							 @Param("triggerTimeEnd") Date triggerTimeEnd,
 							 @Param("logStatus") int logStatus);
 	
-	public XxlJobLog load(@Param("id") long id);
+	public XxlJobLog load(@Param("id") int id);
 
-	public long save(XxlJobLog xxlJobLog);
+	public int save(XxlJobLog xxlJobLog);
 
 	public int updateTriggerInfo(XxlJobLog xxlJobLog);
 
@@ -41,22 +41,20 @@ public interface XxlJobLogDao {
 	
 	public int delete(@Param("jobId") int jobId);
 
-	public Map<String, Object> findLogReport(@Param("from") Date from,
-											 @Param("to") Date to);
+	public int triggerCountByHandleCode(@Param("handleCode") int handleCode);
 
-	public List<Long> findClearLogIds(@Param("jobGroup") int jobGroup,
-									  @Param("jobId") int jobId,
-									  @Param("clearBeforeTime") Date clearBeforeTime,
-									  @Param("clearBeforeNum") int clearBeforeNum,
-									  @Param("pagesize") int pagesize);
-	public int clearLog(@Param("logIds") List<Long> logIds);
+	public List<Map<String, Object>> triggerCountByDay(@Param("from") Date from,
+													   @Param("to") Date to);
 
-	public List<Long> findFailJobLogIds(@Param("pagesize") int pagesize);
+	public int clearLog(@Param("jobGroup") int jobGroup,
+						@Param("jobId") int jobId,
+						@Param("clearBeforeTime") Date clearBeforeTime,
+						@Param("clearBeforeNum") int clearBeforeNum);
 
-	public int updateAlarmStatus(@Param("logId") long logId,
+	public List<Integer> findFailJobLogIds(@Param("pagesize") int pagesize);
+
+	public int updateAlarmStatus(@Param("logId") int logId,
 								 @Param("oldAlarmStatus") int oldAlarmStatus,
 								 @Param("newAlarmStatus") int newAlarmStatus);
-
-	public List<Long> findLostJobIds(@Param("losedTime") Date losedTime);
 
 }

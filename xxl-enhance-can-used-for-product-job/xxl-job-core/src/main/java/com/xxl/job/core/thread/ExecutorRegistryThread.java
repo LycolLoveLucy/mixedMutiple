@@ -23,11 +23,11 @@ public class ExecutorRegistryThread {
 
     private Thread registryThread;
     private volatile boolean toStop = false;
-    public void start(final String appname, final String address){
+    public void start(final String appName, final String address){
 
         // valid
-        if (appname==null || appname.trim().length()==0) {
-            logger.warn(">>>>>>>>>>> xxl-job, executor registry config fail, appname is null.");
+        if (appName==null || appName.trim().length()==0) {
+            logger.warn(">>>>>>>>>>> xxl-job, executor registry config fail, appName is null.");
             return;
         }
         if (XxlJobExecutor.getAdminBizList() == null) {
@@ -42,7 +42,7 @@ public class ExecutorRegistryThread {
                 // registry
                 while (!toStop) {
                     try {
-                        RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
+                        RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, address);
                         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                             try {
                                 ReturnT<String> registryResult = adminBiz.registry(registryParam);
@@ -78,7 +78,7 @@ public class ExecutorRegistryThread {
 
                 // registry remove
                 try {
-                    RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
+                    RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, address);
                     for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                         try {
                             ReturnT<String> registryResult = adminBiz.registryRemove(registryParam);
@@ -102,7 +102,7 @@ public class ExecutorRegistryThread {
                         logger.error(e.getMessage(), e);
                     }
                 }
-                logger.info(">>>>>>>>>>> xxl-job, executor registry thread destroy.");
+                logger.info(">>>>>>>>>>> xxl-job, executor registry thread destory.");
 
             }
         });
@@ -113,17 +113,13 @@ public class ExecutorRegistryThread {
 
     public void readyToStop() {
         toStop = true;
-
         // interrupt and wait
-        if (registryThread != null) {
-            registryThread.interrupt();
-            try {
-                registryThread.join();
-            } catch (InterruptedException e) {
-                logger.error(e.getMessage(), e);
-            }
+        registryThread.interrupt();
+        try {
+            registryThread.join();
+        } catch (InterruptedException e) {
+            logger.error(e.getMessage(), e);
         }
-
     }
 
 }

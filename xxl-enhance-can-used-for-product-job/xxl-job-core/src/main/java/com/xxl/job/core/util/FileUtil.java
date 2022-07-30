@@ -84,11 +84,8 @@ public class FileUtil {
             in = new FileInputStream(file);
             in.read(filecontent);
             in.close();
-
-            return filecontent;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return null;
         } finally {
             if (in != null) {
                 try {
@@ -98,6 +95,7 @@ public class FileUtil {
                 }
             }
         }
+        return filecontent;
     }
 
 

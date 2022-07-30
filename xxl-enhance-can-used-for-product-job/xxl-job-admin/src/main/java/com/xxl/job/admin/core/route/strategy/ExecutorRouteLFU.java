@@ -6,7 +6,6 @@ import com.xxl.job.core.biz.model.TriggerParam;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * 单个JOB对应的每个执行器，使用频率最低的优先被选举
@@ -17,7 +16,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class ExecutorRouteLFU extends ExecutorRouter {
 
-    private static ConcurrentMap<Integer, HashMap<String, Integer>> jobLfuMap = new ConcurrentHashMap<Integer, HashMap<String, Integer>>();
+    private static ConcurrentHashMap<Integer, HashMap<String, Integer>> jobLfuMap = new ConcurrentHashMap<Integer, HashMap<String, Integer>>();
     private static long CACHE_VALID_TIME = 0;
 
     public String route(int jobId, List<String> addressList) {

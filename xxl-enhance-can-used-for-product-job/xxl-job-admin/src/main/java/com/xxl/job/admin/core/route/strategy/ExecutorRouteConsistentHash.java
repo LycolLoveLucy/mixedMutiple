@@ -21,7 +21,7 @@ import java.util.TreeMap;
  */
 public class ExecutorRouteConsistentHash extends ExecutorRouter {
 
-    private static int VIRTUAL_NODE_NUM = 100;
+    private static int VIRTUAL_NODE_NUM = 5;
 
     private static ThreadLocal<MessageDigest> MD = new ThreadLocal<>();
 

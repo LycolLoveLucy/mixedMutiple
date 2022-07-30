@@ -1,31 +1,29 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.scheduler.MisfireStrategyEnum;
-import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = "classpath*:spring/applicationcontext-*.xml")
 public class XxlJobInfoDaoTest {
-	private static Logger logger = LoggerFactory.getLogger(XxlJobInfoDaoTest.class);
 	
 	@Resource
 	private XxlJobInfoDao xxlJobInfoDao;
 	
 	@Test
 	public void pageList(){
-		List<XxlJobInfo> list = xxlJobInfoDao.pageList(0, 20, 0, -1, null, null, null);
-		int list_count = xxlJobInfoDao.pageListCount(0, 20, 0, -1, null, null, null);
-
-		logger.info("", list);
-		logger.info("", list_count);
+		List<XxlJobInfo> list = xxlJobInfoDao.pageList(0, 20, 0, null, null);
+		int list_count = xxlJobInfoDao.pageListCount(0, 20, 0, null, null);
+		
+		System.out.println(list);
+		System.out.println(list_count);
 
 		List<XxlJobInfo> list2 = xxlJobInfoDao.getJobsByGroup(1);
 	}
@@ -34,12 +32,10 @@ public class XxlJobInfoDaoTest {
 	public void save_load(){
 		XxlJobInfo info = new XxlJobInfo();
 		info.setJobGroup(1);
+		info.setJobCron("jobCron");
 		info.setJobDesc("desc");
 		info.setAuthor("setAuthor");
 		info.setAlarmEmail("setAlarmEmail");
-		info.setScheduleType(ScheduleTypeEnum.FIX_RATE.name());
-		info.setScheduleConf(String.valueOf(33));
-		info.setMisfireStrategy(MisfireStrategyEnum.DO_NOTHING.name());
 		info.setExecutorRouteStrategy("setExecutorRouteStrategy");
 		info.setExecutorHandler("setExecutorHandler");
 		info.setExecutorParam("setExecutorParam");
@@ -49,16 +45,10 @@ public class XxlJobInfoDaoTest {
 		info.setGlueRemark("setGlueRemark");
 		info.setChildJobId("1");
 
-		info.setAddTime(new Date());
-		info.setUpdateTime(new Date());
-		info.setGlueUpdatetime(new Date());
-
 		int count = xxlJobInfoDao.save(info);
 
 		XxlJobInfo info2 = xxlJobInfoDao.loadById(info.getId());
-		info.setScheduleType(ScheduleTypeEnum.FIX_RATE.name());
-		info.setScheduleConf(String.valueOf(44));
-		info.setMisfireStrategy(MisfireStrategyEnum.FIRE_ONCE_NOW.name());
+		info2.setJobCron("jobCron2");
 		info2.setJobDesc("desc2");
 		info2.setAuthor("setAuthor2");
 		info2.setAlarmEmail("setAlarmEmail2");
@@ -72,7 +62,6 @@ public class XxlJobInfoDaoTest {
 		info2.setGlueUpdatetime(new Date());
 		info2.setChildJobId("1");
 
-		info2.setUpdateTime(new Date());
 		int item2 = xxlJobInfoDao.update(info2);
 
 		xxlJobInfoDao.delete(info2.getId());
