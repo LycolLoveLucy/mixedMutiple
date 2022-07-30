@@ -6,16 +6,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Time sliding window for limitation situation
+ * Time sliding window for limitation-Requesting situation
  *
  * @Author:Lycol
  */
 public class LimitationRequestStrategy {
 
-    private static final String REJECTED_MESSAGE =
-            "Your current request attention has been rejected by server," +
+    private static final String REQUEST_REJECTED_MESSAGE =
+            "Your current request attention has been rejected by the server," +
                     "It is not be allowed  request  %d times within  %d minutes";
-
 
     /**
      * limitation size
@@ -27,7 +26,6 @@ public class LimitationRequestStrategy {
      * Time unit Second
      */
     private int timeSlidingDownSize;
-
 
     Map<String, AtomicReference<Pair>> limitationConcurrentMap = new ConcurrentHashMap<>();
 
@@ -55,11 +53,10 @@ public class LimitationRequestStrategy {
         else {
             if (pair.getRequestedTime() >= limitationSize) {
                 pair.reset();
-                throw new RuntimeException(String.format(REJECTED_MESSAGE, limitationSize, timeSlidingDownSize));
+                throw new RuntimeException(String.format(REQUEST_REJECTED_MESSAGE, limitationSize, timeSlidingDownSize));
             }
             pair.inc();
         }
-
 
     }
 
@@ -69,7 +66,6 @@ public class LimitationRequestStrategy {
 
 
     public static final class Pair {
-
         public Pair(Long lastRequestTime) {
             this.lastRequestTime = lastRequestTime;
             atomicInteger.set(1);

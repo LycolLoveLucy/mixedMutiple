@@ -40,7 +40,6 @@ public final class HtmlTagParserUtil {
         return matcher.matches();
     }
 
-
     public Map<String, String> getTagMap() {
         return tagMap;
     }
@@ -110,7 +109,6 @@ public final class HtmlTagParserUtil {
             tagMap.put(attribute, "\"" + value + "\"");
         }
     }
-
 
     public void addAttribute(String attribute, String value) {
         tagMap.put(attribute, "\"" + value + "\"");
