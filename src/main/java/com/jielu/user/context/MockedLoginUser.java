@@ -1,6 +1,10 @@
 package com.jielu.user.context;
 
 public class MockedLoginUser {
+    public MockedLoginUser(String userName, Long userId) {
+        this.userName = userName;
+        this.userId = userId;
+    }
 
     private  String userName;
 
