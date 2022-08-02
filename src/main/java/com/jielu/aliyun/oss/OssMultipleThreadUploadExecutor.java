@@ -6,6 +6,7 @@ import com.jielu.leetcode.NamedThreadFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -49,7 +50,11 @@ public class OssMultipleThreadUploadExecutor {
          }
          countDownLatch.await();
          threadPoolExecutor.shutdown();
-         Collections.sort(partETags, (o1, o2) -> o2.getPartNumber()-o1.getPartNumber());
+         if(threadPoolExecutor.isTerminated()){
+             threadPoolExecutor.awaitTermination(5, TimeUnit.SECONDS);
+         }
+
+         Collections.sort(partETags, Comparator.comparingInt(PartETag::getPartNumber));
          return partETags;
 
      }

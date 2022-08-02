@@ -7,6 +7,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -26,17 +27,21 @@ public class OssUtil {
      */
     public List<String> uploadFileToOss(List<MultipartFile> multipartFileList){
         String endPoint = "", accessKeyId = "", accessKeySecret = "", bucket = "", bucketName = "";
-        String objectName = "/lycol/upload/oss/" + FastDateFormat.getInstance("yyyyMMdd", Locale.CHINESE).format(new Date());
+        String objectName = "/lycol/upload/oss/"
+                + FastDateFormat.getInstance("yyyyMMdd", Locale.CHINESE).format(new Date());
+
 
         OSSClient ossClient = OssClientFactory.createOssClient(endPoint, accessKeyId, accessKeySecret, bucket);
-        InitiateMultipartUploadRequest request = new InitiateMultipartUploadRequest(bucketName, objectName);
+
         // 初始化分片。
-        InitiateMultipartUploadResult uploadResult = ossClient.initiateMultipartUpload(request);
-        String uploadId = uploadResult.getUploadId();
         List<String> res = new ArrayList<>();
         try {
 
         for (MultipartFile multipartFile : multipartFileList) {
+            InitiateMultipartUploadRequest request = new InitiateMultipartUploadRequest(bucketName,
+                    objectName+getFileName(multipartFile));
+            InitiateMultipartUploadResult uploadResult = ossClient.initiateMultipartUpload(request);
+            String uploadId = uploadResult.getUploadId();
 
             InputStream inputStream = multipartFile.getInputStream();
             SliceInputStream sliceInputStream = new SliceInputStream(inputStream, 1024);
@@ -48,10 +53,8 @@ public class OssUtil {
             CompleteMultipartUploadRequest completeMultipartUploadRequest =
                     new CompleteMultipartUploadRequest(bucketName, objectName, uploadId, partETags);
 
-            CompleteMultipartUploadResult completeMultipartUploadResult =
                     ossClient.completeMultipartUpload(completeMultipartUploadRequest);
-
-            res.add(completeMultipartUploadResult.getLocation());
+            res.add(endPoint+ File.separator+objectName);
             IOUtils.close(inputStream);
         }
         }
@@ -67,5 +70,10 @@ public class OssUtil {
 
     }
 
-
+    private String getFileName(MultipartFile file) {
+        String filename = file.getOriginalFilename();
+        int lastIndexOf = filename.lastIndexOf(".");
+        String suffix = filename.substring(lastIndexOf);
+        return suffix;
+    }
 }
