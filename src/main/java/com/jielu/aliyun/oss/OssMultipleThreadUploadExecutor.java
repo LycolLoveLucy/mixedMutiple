@@ -7,10 +7,7 @@ import com.jielu.leetcode.NamedThreadFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * OSS Mul-Thread upload file
@@ -24,20 +21,21 @@ public class OssMultipleThreadUploadExecutor {
     }
 
    final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
-            10,
-            50,
-            1000 * 60,
-            TimeUnit.MILLISECONDS,
-            new LinkedBlockingQueue<>(),
-            new NamedThreadFactory("thread-oss-upload-file")
-            );
+           10,
+           50,
+           1000 * 60,
+           TimeUnit.MILLISECONDS,
+           new LinkedBlockingQueue<>(),
+           new NamedThreadFactory("thread-oss-upload-file"),
+           (r, executor) -> r.run()
+   );
 
 
      public List<PartETag> genPartTag(List<UploadPartRequest> uploadPartResultList) throws InterruptedException {
 
          CountDownLatch countDownLatch = new CountDownLatch(uploadPartResultList.size());
          List<PartETag> partETags=new ArrayList<>(uploadPartResultList.size());
-         for (int i = 1; i <= 10; i++) {
+         for (int i = 1; i <= uploadPartResultList.size(); i++) {
              int finalI = i;
              threadPoolExecutor.execute(() -> {
                  try {
