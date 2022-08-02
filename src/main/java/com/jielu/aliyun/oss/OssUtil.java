@@ -2,6 +2,7 @@ package com.jielu.aliyun.oss;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.*;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +24,7 @@ public class OssUtil {
      * @throws IOException
      * @throws InterruptedException
      */
-    public List<String> uploadFileToOss(List<MultipartFile> multipartFileList) throws IOException, InterruptedException {
+    public List<String> uploadFileToOss(List<MultipartFile> multipartFileList){
         String endPoint = "", accessKeyId = "", accessKeySecret = "", bucket = "", bucketName = "";
         String objectName = "/lycol/upload/oss/" + FastDateFormat.getInstance("yyyyMMdd", Locale.CHINESE).format(new Date());
 
@@ -33,11 +34,12 @@ public class OssUtil {
         InitiateMultipartUploadResult uploadResult = ossClient.initiateMultipartUpload(request);
         String uploadId = uploadResult.getUploadId();
         List<String> res = new ArrayList<>();
+        try {
+
         for (MultipartFile multipartFile : multipartFileList) {
 
             InputStream inputStream = multipartFile.getInputStream();
             SliceInputStream sliceInputStream = new SliceInputStream(inputStream, 1024);
-
             List<UploadPartRequest> uploadPartRequestList = sliceInputStream.genUploadPartRequestList(bucketName, objectName, uploadId);
             OssMultipleThreadUploadExecutor ossMultipleThreadUploadExecutor =
                     new OssMultipleThreadUploadExecutor(ossClient);
@@ -50,8 +52,17 @@ public class OssUtil {
                     ossClient.completeMultipartUpload(completeMultipartUploadRequest);
 
             res.add(completeMultipartUploadResult.getLocation());
+            IOUtils.close(inputStream);
         }
-        ossClient.shutdown();
+        }
+
+        catch (Exception e){
+            throw  new RuntimeException(e);
+        }
+        finally {
+            ossClient.shutdown();
+        }
+
         return res;
 
     }
