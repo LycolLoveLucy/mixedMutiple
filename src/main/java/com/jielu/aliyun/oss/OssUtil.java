@@ -45,7 +45,7 @@ public class OssUtil {
 
             InputStream inputStream = multipartFile.getInputStream();
             SliceInputStream sliceInputStream = new SliceInputStream(inputStream, 1024);
-            List<UploadPartRequest> uploadPartRequestList = sliceInputStream.genUploadPartRequestList(bucketName, objectName, uploadId);
+            List<UploadPartRequest> uploadPartRequestList = sliceInputStream.collectUploadPartRequestList(bucketName, objectName, uploadId);
             OssMultipleThreadUploadExecutor ossMultipleThreadUploadExecutor =
                     new OssMultipleThreadUploadExecutor(ossClient);
 
@@ -53,7 +53,7 @@ public class OssUtil {
             CompleteMultipartUploadRequest completeMultipartUploadRequest =
                     new CompleteMultipartUploadRequest(bucketName, objectName, uploadId, partETags);
 
-                    ossClient.completeMultipartUpload(completeMultipartUploadRequest);
+            ossClient.completeMultipartUpload(completeMultipartUploadRequest);
             res.add(endPoint+ File.separator+objectName);
             IOUtils.close(inputStream);
         }

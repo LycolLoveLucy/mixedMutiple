@@ -18,7 +18,7 @@ public class SliceInputStream {
         this.partSize=partSize;
     }
 
-    public List<UploadPartRequest> genUploadPartRequestList(String bucketName,String objectName,String uploadId
+    public List<UploadPartRequest> collectUploadPartRequestList(String bucketName, String objectName, String uploadId
                                                             ) throws IOException {
 
         final long partSize = this.partSize;
