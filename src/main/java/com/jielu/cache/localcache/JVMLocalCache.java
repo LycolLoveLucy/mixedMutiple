@@ -12,7 +12,7 @@ public class JVMLocalCache {
      */
     private int evictTime = 0;
 
-    public static final JVMLocalCache getInstance(int evictTime) {
+    public static  JVMLocalCache getInstance(int evictTime) {
         JVMLocalCache instance = new JVMLocalCache(evictTime);
         return instance;
     }

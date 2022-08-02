@@ -17,7 +17,7 @@ public class LimitationRequestStrategy {
                     "It is not be allowed  request  %d times within  %d minutes";
 
     /**
-     * limitation size
+     * Limitation size
      */
     private int limitationSize;
 

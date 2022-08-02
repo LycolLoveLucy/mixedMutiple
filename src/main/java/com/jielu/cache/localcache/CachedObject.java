@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class CachedObject implements Serializable {
 
     /**
-     * born time
+     * Born time
      */
     private  long bornTime;
 

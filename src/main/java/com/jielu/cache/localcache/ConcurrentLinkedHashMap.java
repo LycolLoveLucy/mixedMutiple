@@ -42,11 +42,12 @@ public final class ConcurrentLinkedHashMap<S, C> extends ConcurrentHashMap {
         Node first;
         transient Object k;
         public Node(Object k) {
-            if (first == null) {
-                first = this;
+
+         if (first == null) {
+              first = this;
             }
-            this.k = k;
-        }
+             this.k = k;
+          }
 
        private Node getFirst() {
             return first;
