@@ -35,7 +35,7 @@ public class OssMultipleThreadUploadExecutor {
 
          CountDownLatch countDownLatch = new CountDownLatch(uploadPartResultList.size());
          List<PartETag> partETags=new ArrayList<>(uploadPartResultList.size());
-         for (int i = 1; i <= uploadPartResultList.size(); i++) {
+         for (int i = 1; i <uploadPartResultList.size(); i++) {
              int finalI = i;
              threadPoolExecutor.execute(() -> {
                  try {
