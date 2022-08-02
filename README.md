@@ -12,4 +12,4 @@ Spring feign configuration,done-things what is get-request can using request wit
 
 Rewritting seata-sql-parser this function is TODO
 
-Enhance xxl-job this function is doing
+Enhance xxl-job this function is building,In my opion distrubution-job need SPI
