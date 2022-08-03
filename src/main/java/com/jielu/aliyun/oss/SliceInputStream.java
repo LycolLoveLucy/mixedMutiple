@@ -12,7 +12,6 @@ public class SliceInputStream {
     private final int partSize;
     private InputStream inputStream;
 
-
     public SliceInputStream(InputStream inputStream,int partSize) {
         this.inputStream = inputStream;
         this.partSize=partSize;

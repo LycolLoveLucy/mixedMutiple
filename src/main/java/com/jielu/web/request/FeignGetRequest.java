@@ -1,6 +1,8 @@
 package com.jielu.web.request;
 
-public class FeignGetRequest {
+import java.io.Serializable;
+
+public class FeignGetRequest implements Serializable {
 
     private  String firstName;
 
@@ -12,14 +14,7 @@ public class FeignGetRequest {
         return expand;
     }
 
-    @Override
-    public String toString() {
-        return "FeignGetRequest{" +
-                "firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
-                ", expand=" + expand.toString() +
-                '}';
-    }
+
 
     public void setExpand(Expand expand) {
         this.expand = expand;
