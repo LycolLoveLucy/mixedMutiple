@@ -12,4 +12,6 @@ public class LocalCachedMapConfig {
         return  JVMLocalCache.getInstance(60*60*24);
     }
 
+
+
 }

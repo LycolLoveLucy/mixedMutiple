@@ -33,6 +33,9 @@ public class CustomLoggingDispatcherServlet extends DispatcherServlet {
         try {
             super.doDispatch(requestWrapper, responseWrapper);
         }
+        catch (Exception e){
+            e.printStackTrace();
+        }
         finally {
             finallyExecution(request, response, requestWrapper, responseWrapper, rootNode, method);
         }

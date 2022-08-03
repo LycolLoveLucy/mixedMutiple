@@ -30,11 +30,9 @@ public class ApiFilter extends OncePerRequestFilter implements Ordered {
                                     HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
         MDC.put(REQUEST_ID_MDC_KEY, UUID.randomUUID().toString());
+        httpServletResponse.setHeader(REQUEST_ID_MDC_KEY,MDC.get(REQUEST_ID_MDC_KEY));
         //redis.set(DISTRIBUTION_REQUEST_ID_MDC_KEY, UUID.randomUUID().toString())
-        try {
-            filterChain.doFilter(httpServletRequest, httpServletResponse);
-        } finally {
-            MDC.remove(REQUEST_ID_MDC_KEY);
-        }
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
+
     }
 }

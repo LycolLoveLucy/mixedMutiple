@@ -1,6 +1,7 @@
 package com.jielu.service;
 
 import com.jielu.cache.localcache.JVMLocalCache;
+import com.jielu.config.RetryFlag;
 import com.jielu.util.MD5EncodeInputStreamUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,6 +14,7 @@ public class UploadServiceImpl  implements  UploadService{
 
     static  final JVMLocalCache localCache=JVMLocalCache.getInstance(60*60);
 
+    @RetryFlag(triggerExceptionClass =RuntimeException.class)
     @Override
     public void upload(List<MultipartFile> multipartFiles) throws RuntimeException, IOException {
 

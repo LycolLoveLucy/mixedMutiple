@@ -24,8 +24,7 @@ public class HeapOutSidePageUtil<R> {
     Map<Integer,Integer> byteMap=new HashMap<>();
 
     public HeapOutSidePageUtil(List<R> sourceList) {
-        bb.flip();
-        bb.clear();
+
         this.sourceList = sourceList;
         int index=0;
         for(byte[]b:splitByte(sourceList)) {
@@ -44,7 +43,6 @@ public class HeapOutSidePageUtil<R> {
         int startIndex=(pageIndex-1)*pageSize;
         try {
             for (; startIndex < startIndex + pageSize; startIndex++) {
-                System.out.println(byteMap.get(startIndex));
                 ByteBuffer byteBuffer = bb.slice(startIndex, byteMap.get(startIndex));
                 rst.add((R) bytesToObject(extractBytes(byteBuffer)));
 
@@ -69,20 +67,26 @@ public class HeapOutSidePageUtil<R> {
         List<byte[]> list=new ArrayList<>(sourceList.size());
         int index=0;
         for(R source:sourceList){
-            System.out.println(source.toString());
-            byte[]s=getBytesOf(source);
+            byte[]s= new byte[0];
+            try {
+                s = getBytesOf(source);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             list.add(s);
             byteMap.put(index,s.length);
         }
         return  list;
     }
 
-    byte[] getBytesOf(R sourceObj){
+    byte[] getBytesOf(R sourceObj) throws IOException {
             byte [] barray = null;
-            try
+        ByteArrayOutputStream baos =null;
+        ObjectOutputStream objectOutputStream=null;
+        try
             {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(baos);
+                 baos = new ByteArrayOutputStream();
+                 objectOutputStream = new ObjectOutputStream(baos);
                 objectOutputStream.writeObject(sourceObj);
                 barray = baos.toByteArray();
             }
@@ -90,6 +94,10 @@ public class HeapOutSidePageUtil<R> {
             {
                 e.printStackTrace();
             }
+        finally {
+            baos.close();
+            objectOutputStream.close();
+        }
 
             return barray;
         }
@@ -124,6 +132,7 @@ public class HeapOutSidePageUtil<R> {
         HeapOutSidePageUtil heapOutSidePageUtil=new HeapOutSidePageUtil(feignGetRequests);
         heapOutSidePageUtil.getBytesOf(feignGetRequests.get(0));
         DirectoryTest f= (DirectoryTest) heapOutSidePageUtil.bytesToObject(   heapOutSidePageUtil.getBytesOf(feignGetRequests.get(0)));
+        System.out.println(f.getA());
         System.out.println(heapOutSidePageUtil.getPageResult(1,10));
         System.out.println(f.getA());
         String regEx_html = "<[^>]+>";
