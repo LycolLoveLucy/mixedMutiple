@@ -1,8 +1,8 @@
 package com.jielu.user.context;
 
 public class NameThreadLocal extends  ThreadLocal<MockedLoginUser>{
-
     public volatile   LoginContextType loginContextType;
+
 
     public NameThreadLocal(){
         this.loginContextType=loginContextType;

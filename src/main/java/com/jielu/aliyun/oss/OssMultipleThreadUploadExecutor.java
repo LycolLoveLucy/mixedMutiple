@@ -21,12 +21,12 @@ public class OssMultipleThreadUploadExecutor {
         this.ossClient=ossClient;
     }
 
-   final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
+   final  ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
            10,
            50,
            1000 * 60,
            TimeUnit.MILLISECONDS,
-           new LinkedBlockingQueue<>(),
+           new SynchronousQueue<>(),
            new NamedThreadFactory("thread-oss-upload-file"),
            (r, executor) -> r.run()
    );
@@ -58,6 +58,7 @@ public class OssMultipleThreadUploadExecutor {
          return partETags;
 
      }
+
 
 
 
