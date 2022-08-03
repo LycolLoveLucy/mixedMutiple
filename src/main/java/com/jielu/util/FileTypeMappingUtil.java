@@ -1,17 +1,36 @@
 package com.jielu.util;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+
+import java.io.*;
 
 public class FileTypeMappingUtil {
 
-    private static FileType getFileType(byte[]inputStreamByte) throws IOException {
+    public static FileType getFileType(byte[]inputStreamByte) throws IOException {
         byte[]copy=new byte[20];
         System.arraycopy(inputStreamByte,0,copy,0,20);
         String hex=bytesToMagicFileTypeHexString(copy);
         return FileType.getFileType(hex);
+
+    }
+
+    public static FileType getFileType(InputStream inputStream) throws IOException {
+        byte[]copy=new byte[inputStream.available()];
+        inputStream.read(copy);
+        return  getFileType(copy);
+
+    }
+    public static FileType getFileType(String path) throws IOException {
+        File file=new File(path);
+        if(!file.exists()){
+            throw  new IOException("file not exists:["+path+"]");
+        }
+        FileInputStream fileReader=new FileInputStream(path);
+        byte[]copy=new byte[fileReader.available()];
+        fileReader.read(copy);
+        return  getFileType(copy);
 
     }
         /**
@@ -36,15 +55,6 @@ public class FileTypeMappingUtil {
     }
 
 
-
-
-    public static void main(String[] args) throws IOException {
-        FileInputStream fileReadernew=new FileInputStream(new File("D:/mmexport1656057743660.mp5"));
-        byte []bs=new byte[fileReadernew.available()];
-        fileReadernew.read(bs);
-        System.out.println(bs.length);
-        System.out.println(getFileType(bs));
-    }
     public  enum FileType {
         /**
          * UNKNOWN TYPE
