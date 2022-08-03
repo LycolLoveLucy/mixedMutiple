@@ -12,11 +12,10 @@ public class MethodRetryInterceptorConfig {
 
     @Bean
     public DefaultPointcutAdvisor defaultPointcutAdvisor() {
+
         RetryMethodInterceptor methodInterceptor = new RetryMethodInterceptor();
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
         pointcut.setExpression(traceExecution);
-
-
 
         DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor();
         advisor.setPointcut(pointcut);

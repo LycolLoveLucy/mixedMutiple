@@ -23,7 +23,6 @@ public class RetryHandler implements  Retry{
         Object res=null;
          while (retryCnt>=1){
              time.sleep(50);
-             method.setAccessible(true);
              try {
                res=  invocation.proceed();
              }
@@ -34,7 +33,7 @@ public class RetryHandler implements  Retry{
                  --retryCnt;
                  logger.warn("the method name"+method.getName()+"has been retry "+(retry.number()-retryCnt)+" times");
 
-                 res=invocation.proceed();
+
              }
              return  res;
          }
