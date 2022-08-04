@@ -146,14 +146,14 @@ public class AsyncLogger implements Log {
      * @return
      */
     static String  replaceOverFlowSpace(String format){
-      return   format.replaceAll("[{]+[\\s+]+[}]","");
+      return   format.replaceAll("[{]+[\\s+]+[}]","{}");
     }
 
     public static void main(String[] args) {
         AsyncLogger asyncLogger=new AsyncLogger("test");
         System.out.println("{ }123".replaceAll("[{]+[\\s+]+[}]","123"));
 
-        asyncLogger.info("123 {},{}",6,7);
+        asyncLogger.info("123 {432},{  }",6,7);
     }
 
 }
