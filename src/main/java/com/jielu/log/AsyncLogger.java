@@ -13,7 +13,7 @@ public class AsyncLogger implements Log {
     private final Logger log;
 
     public AsyncLogger(String clazz) {
-        log =    LoggerFactory.getLogger(AsyncLogger.class);
+        log =    LoggerFactory.getLogger(clazz);
     }
 
 
@@ -56,7 +56,13 @@ public class AsyncLogger implements Log {
 
     @Override
     public void error(String format, Object... params) {
-
+        Future<?> future= Executors.newSingleThreadExecutor(
+                        new NamedThreadFactory("sync-logging"))
+                .submit(() -> log.error(replaceOverFlowSpace(format),params)
+                );
+        if(future.isCancelled()){
+            log.debug("Log thread is busing");
+        }
     }
 
     @Override
