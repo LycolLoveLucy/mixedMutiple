@@ -1,7 +1,5 @@
 package com.jielu.user.context;
 
-import org.apache.commons.lang3.builder.ToStringExclude;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,7 +47,6 @@ public class UserConTextThreadLocalHolder {
                 tenThreads[atomicInteger.get()].start();
                 tenThreads[atomicInteger.get()].join();
 
-                System.out.println(123);
     }
     for (int i = 0; i < testList.size(); i++) {
         System.out.println(testList.get(i));
